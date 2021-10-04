@@ -7,6 +7,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 import android.widget.Button;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,20 +19,31 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         Random random = new Random();
-        int randomNumber = random.nextInt(11);
+        int randomNumber = random.nextInt(101);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Context context = getApplicationContext();
-        CharSequence messageWin = "¡¡Has acertado!!";
-        CharSequence messageLose = "Has fallado...";
 
+        int attemps = 0;
         int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, messageWin, duration);
+
 
         final Button button = findViewById(R.id.playButton);
         button.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                toast.show();
+
+                TextInputLayout userInput = findViewById(R.id.numberInput);
+                int userNumber = Integer.valueOf(userInput.getEditText().toString());
+                if (userNumber < randomNumber){
+                    Toast.makeText(context, "El número es mayor que "+ userNumber, duration).show();
+                    attemps++;
+                }else if(userNumber > randomNumber){
+                    Toast.makeText(context, "El número es menor que "+ userNumber, duration).show();
+                    attemps++;
+                }else{
+                    Toast.makeText(context, "Has ganado! Intentos:" +attemps, duration).show();
+                }
+
             }
         });
     }
