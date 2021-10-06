@@ -19,18 +19,18 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
         app:layout_constraintVertical_bias="0.0" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="178dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/numberInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Escribe un número del 0 al 100..."
-            android:inputType="number" />
-    </com.google.android.material.textfield.TextInputLayout>
+    <EditText
+        android:id="@+id/userInputNumber"
+        android:layout_width="304dp"
+        android:layout_height="51dp"
+        android:ems="10"
+        android:hint="Introduce un número del 0 al 100"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/playButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.433" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

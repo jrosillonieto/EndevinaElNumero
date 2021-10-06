@@ -4,14 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 import android.widget.Button;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,27 +22,26 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Context context = getApplicationContext();
 
-        int attemps = 0;
+        AtomicInteger attemps = new AtomicInteger();
         int duration = Toast.LENGTH_SHORT;
 
-
         final Button button = findViewById(R.id.playButton);
-        button.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        button.setOnClickListener(v -> {
+            EditText userInput = findViewById(R.id.userInputNumber);
+            int userNumber = Integer.parseInt(userInput.getText().toString());
 
-                TextInputLayout userInput = findViewById(R.id.numberInput);
-                int userNumber = Integer.valueOf(userInput.getEditText().toString());
-                if (userNumber < randomNumber){
-                    Toast.makeText(context, "El número es mayor que "+ userNumber, duration).show();
-                    attemps++;
-                }else if(userNumber > randomNumber){
-                    Toast.makeText(context, "El número es menor que "+ userNumber, duration).show();
-                    attemps++;
-                }else{
-                    Toast.makeText(context, "Has ganado! Intentos:" +attemps, duration).show();
-                }
-
+            if (userNumber < randomNumber){
+                Toast.makeText(context, "El número es mayor que "+ userNumber, duration).show();
+                attemps.getAndIncrement();
+            }else if(userNumber > randomNumber){
+                Toast.makeText(context, "El número es menor que "+ userNumber, duration).show();
+                attemps.getAndIncrement();
+            }else{
+                Toast.makeText(context, "Has ganado! Intentos:" + attemps, duration).show();
+                attemps.getAndIncrement();
             }
+
         });
+
     }
 }
