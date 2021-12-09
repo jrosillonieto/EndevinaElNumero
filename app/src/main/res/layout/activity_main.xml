@@ -16,21 +16,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/userInputNumber"
+        app:layout_constraintVertical_bias="0.556" />
 
     <EditText
         android:id="@+id/userInputNumber"
         android:layout_width="304dp"
         android:layout_height="51dp"
+        android:layout_marginTop="168dp"
         android:ems="10"
-        android:hint="Introduce un número del 0 al 100"
+        android:hint="Introdueix un número del 0 al 100"
+        android:imeOptions="actionDone"
         android:inputType="number"
-        app:layout_constraintBottom_toTopOf="@+id/playButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.433" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
