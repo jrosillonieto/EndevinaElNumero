@@ -1,12 +1,17 @@
 package com.example.endrevina;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,9 +22,11 @@ public class RankingActivity extends AppCompatActivity {
     // Model: Record (intents=puntuació, nom)
     class Record {
         public int intents;
+        public String file;
         public String nom;
 
-        public Record(int _intents, String _nom ) {
+        public Record(String _file, int _intents, String _nom ) {
+            file = _file;
             intents = _intents;
             nom = _nom;
         }
@@ -41,9 +48,10 @@ public class RankingActivity extends AppCompatActivity {
         btnReturnMenu = findViewById(R.id.btnTornar);
         String name = getIntent().getStringExtra("rankingName");
         int attempts = getIntent().getIntExtra("rankingAttempts", 0);
+        String fileName = getIntent().getStringExtra("fileName");
 
         // S'afegueix el nou record
-        records.add(new Record(100000/attempts, name));
+        records.add(new Record(fileName,100000/attempts, name));
 
         // S'ordena el ranking
         if (records.size()>1){
@@ -62,14 +70,19 @@ public class RankingActivity extends AppCompatActivity {
             @Override
             public View getView(int pos, View convertView, ViewGroup container)
             {
+
                 // getView ens construeix el layout i hi "pinta" els valors de l'element en la posició pos
                 if( convertView==null ) {
                     // inicialitzem l'element la View amb el seu layout
                     convertView = getLayoutInflater().inflate(R.layout.list_item, container, false);
                 }
+
+                String fileName = getItem(pos).file;
                 // "Pintem" valors (també quan es refresca)
                 ((TextView) convertView.findViewById(R.id.nom)).setText(getItem(pos).nom);
                 ((TextView) convertView.findViewById(R.id.intents)).setText(Integer.toString(getItem(pos).intents));
+                Uri fileUri = Uri.fromFile(getFile(fileName));
+                ((ImageView) convertView.findViewById(R.id.userImage)).setImageURI(fileUri);
                 return convertView;
             }
 
@@ -86,6 +99,14 @@ public class RankingActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+    }
+
+    protected File getFile(String fileName){
+        // Guardar a un fitxer
+        File path = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        return new File(path, fileName);
     }
 
 }

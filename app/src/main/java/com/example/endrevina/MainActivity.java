@@ -2,10 +2,15 @@ package com.example.endrevina;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -15,14 +20,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Button;
 
+import java.io.File;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
     private int randomNumber;
     private int attempts;
     private EditText userNumberInput;
     private Button btnPlay;
+    static int counter = 0;
+    private String fileName;
+    private String nameString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,15 +101,17 @@ public class MainActivity extends AppCompatActivity {
 
         alert.setPositiveButton("Registrar", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                String nameString = name.getText().toString();
+                nameString = name.getText().toString();
 
                 if (nameString.isEmpty()){
                     showDialog();
                 }else {
-                    Intent i = new Intent(getApplicationContext(), RankingActivity.class);
-                    i.putExtra("rankingName", nameString);
-                    i.putExtra("rankingAttempts", attempts);
-                    startActivity(i);
+                    counter++;
+                    String sctm = String.valueOf(SystemClock.currentThreadTimeMillis());
+                    fileName = String.valueOf(counter)+ String.valueOf(randomNumber) + sctm +
+                            "nickImage.jpg";
+                    Log.i("FileName: ", fileName);
+                    dispatchTakePictureIntent();
 
                 }
 
@@ -122,4 +134,51 @@ public class MainActivity extends AppCompatActivity {
         attempts = 0;
         Log.i("GameStatus", "Game reset, new random number = "+String.valueOf(randomNumber));
     }
+
+
+    protected File getFile(){
+        // Guardar a un fitxer
+        File path = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File photo = new File(path, fileName);
+        return photo;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Log.i("Funcio", "Entrant");
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+
+        Log.i("Funcio", "Entrant2");
+
+        // Create the File where the photo should go
+        File photoFile = getFile();
+        Log.i("Funcio", "Entrant3");
+        // Continue only if the File was successfully created
+        if (photoFile != null) {
+            Log.i("Funcio", "Entrant4");
+            Uri photoURI = FileProvider.getUriForFile(this,
+                    "com.example.endrevina",
+                    photoFile);
+            Log.i("Funcio", "Entrant5");
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+            Log.i("Funcio", "Entrant6");
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            Log.i("Funcio", "Entrant7");
+
+
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Intent i = new Intent(getApplicationContext(), RankingActivity.class);
+        i.putExtra("rankingName", nameString);
+        i.putExtra("rankingAttempts", attempts);
+        i.putExtra("fileName", fileName);
+        startActivity(i);
+
+    }
+
 }
